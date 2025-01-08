@@ -9,7 +9,7 @@ const App = (): JSX.Element => {
     <Routes>
       <Route path="/" element={<MainLayout />}>
         <Route index element={<CoinList />} />
-        <Route path="/coin" element={<CoinPage />} />
+        <Route path="/:id" element={<CoinPage />} />
       </Route>
     </Routes>
   );

@@ -1,31 +1,39 @@
-import { JSX, useEffect } from "react";
+import { JSX } from "react";
+import { useNavigate } from "react-router-dom";
 import { Table, Button, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
-import { axiosCoins } from "../../redux/slices/coinsSlice";
+import BuyFormModal from "../../components/BuyFormModal";
+import {
+  setIsBuyFormOpen,
+  setSelectedCoin,
+} from "../../redux/slices/isBuyFormOpenSlice";
+import {
+  selectCoins,
+  selectCoinsStatus,
+  selectCoinsError,
+} from "../../redux/selectors/selectors";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
+import { priceUsdStr, billionStr, changePercentStr } from "../../utils/utils";
+import type { Coin } from "../../api";
 import styles from "./index.module.css";
 
 const { Text } = Typography;
 
-// Интерфейс для данных монет
-export type Coin = {
-  id: string;
-  rank: string;
-  symbol: string;
-  name: string;
-  vwap24Hr: string | null;
-  changePercent24Hr: string | null;
-  marketCapUsd: string | null;
-  priceUsd: string | null;
-};
-
 const CoinList = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const { coins, status, error } = useAppSelector((state) => state.coins);
+  const coins = useAppSelector(selectCoins);
+  const status = useAppSelector(selectCoinsStatus);
+  const error = useAppSelector(selectCoinsError);
 
-  useEffect(() => {
-    dispatch(axiosCoins());
-  }, [dispatch]);
+  const navigate = useNavigate();
+
+  if (error) {
+    return (
+      <Text type="danger" className={styles.error}>
+        {error}
+      </Text>
+    );
+  }
 
   const columns: ColumnsType<Coin> = [
     {
@@ -60,8 +68,7 @@ const CoinList = (): JSX.Element => {
       key: "vwap24Hr",
       width: "15%",
       align: "center",
-      render: (value: string | null) =>
-        value ? `$${parseFloat(value).toFixed(2)}` : "N/A",
+      render: (value: string | null) => priceUsdStr(value),
     },
     {
       title: "Change (24Hr)",
@@ -69,13 +76,7 @@ const CoinList = (): JSX.Element => {
       key: "changePercent24Hr",
       width: "15%",
       align: "center",
-      render: (value: string | null) => (
-        <span
-          style={{ color: parseFloat(value || "0") >= 0 ? "green" : "red" }}
-        >
-          {parseFloat(value || "0").toFixed(2)}%
-        </span>
-      ),
+      render: (value: string | null) => changePercentStr(value),
     },
     {
       title: "Market Cap",
@@ -83,8 +84,7 @@ const CoinList = (): JSX.Element => {
       key: "marketCapUsd",
       width: "15%",
       align: "center",
-      render: (value: string | null) =>
-        value ? `$${(parseFloat(value) / 1e9).toFixed(1)} млрд` : "N/A",
+      render: (value: string | null) => billionStr(value),
     },
     {
       title: "Price",
@@ -93,7 +93,7 @@ const CoinList = (): JSX.Element => {
       width: "10%",
       align: "center",
       render: (value: string | null) => (
-        <Text strong>{value ? `$${parseFloat(value).toFixed(2)}` : "N/A"}</Text>
+        <Text strong>{priceUsdStr(value)}</Text>
       ),
     },
     {
@@ -102,7 +102,14 @@ const CoinList = (): JSX.Element => {
       width: "10%",
       align: "center",
       render: (_: any, record: Coin) => (
-        <Button type="primary" onClick={() => console.log(`Add: ${record.id}`)}>
+        <Button
+          type="primary"
+          onClick={(event) => {
+            event.stopPropagation();
+            dispatch(setSelectedCoin(record));
+            dispatch(setIsBuyFormOpen(true));
+          }}
+        >
           +
         </Button>
       ),
@@ -110,17 +117,23 @@ const CoinList = (): JSX.Element => {
   ];
 
   return (
-    <Table<Coin>
-      dataSource={coins}
-      columns={columns}
-      rowKey={(record) => record.id}
-      pagination={{
-        pageSize: 10,
-        position: ["bottomCenter"],
-        showSizeChanger: false,
-      }}
-      loading={status === "loading"}
-    />
+    <>
+      <Table<Coin>
+        dataSource={coins}
+        columns={columns}
+        rowKey={(record) => record.id}
+        onRow={(record) => ({
+          onClick: () => navigate(`/${record.id}`),
+        })}
+        pagination={{
+          pageSize: 10,
+          position: ["bottomCenter"],
+          showSizeChanger: false,
+        }}
+        loading={status === "loading"}
+      />
+      <BuyFormModal />
+    </>
   );
 };
 
