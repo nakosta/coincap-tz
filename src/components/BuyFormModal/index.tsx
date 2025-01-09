@@ -78,7 +78,7 @@ const BuyFormModal = (): JSX.Element => {
           ]}
         >
           <InputNumber
-            min={0.01}
+            min={0.0001}
             step={0.01}
             stringMode
             className={styles.input}

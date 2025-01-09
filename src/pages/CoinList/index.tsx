@@ -101,7 +101,7 @@ const CoinList = (): JSX.Element => {
       key: "add",
       width: "10%",
       align: "center",
-      render: (_: any, record: Coin) => (
+      render: (_: any, record) => (
         <Button
           type="primary"
           onClick={(event) => {
