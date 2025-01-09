@@ -18,7 +18,7 @@ export const axiosCoin = createAppAsyncThunk<
   }
 });
 
-interface CoinState {
+type CoinState = {
   coin: Coin | null;
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;

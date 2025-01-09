@@ -18,11 +18,11 @@ export const axiosHistory = createAppAsyncThunk<
   }
 });
 
-interface HistoryState {
+type HistoryState = {
   history: History[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-}
+};
 
 const initialState: HistoryState = {
   history: [],

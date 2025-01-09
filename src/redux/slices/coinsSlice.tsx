@@ -18,11 +18,11 @@ export const axiosCoins = createAppAsyncThunk<
   }
 });
 
-interface CoinsState {
+type CoinsState = {
   coins: Coin[];
   status: "idle" | "loading" | "succeeded" | "failed";
   error: string | null;
-}
+};
 
 const initialState: CoinsState = {
   coins: [],

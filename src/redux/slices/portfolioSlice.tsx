@@ -16,9 +16,9 @@ export type PortfolioItem = {
   operations: PortfolioOperation[];
 };
 
-export interface PortfolioState {
+export type PortfolioState = {
   items: PortfolioItem[];
-}
+};
 
 const initialState: PortfolioState = loadFromLocalStorage();
 
