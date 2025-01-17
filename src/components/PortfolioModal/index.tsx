@@ -17,6 +17,7 @@ import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import {
   calculateTotalValue,
   calculateCurrentQuantity,
+  toFixed2,
 } from "../../utils/utils";
 import styles from "./index.module.css";
 
@@ -60,14 +61,14 @@ const PortfolioModal = (): JSX.Element => {
       key: "currentPrice",
       width: "20%",
       align: "center",
-      render: (value: number) => `$${(value ?? 0).toFixed(2)}`,
+      render: (value: number) => `$${toFixed2(value ?? 0)}`,
     },
     {
       title: "Количество",
       key: "quantity",
       width: "20%",
       align: "center",
-      render: (_, record) => calculateCurrentQuantity(record).toFixed(2),
+      render: (_, record) => calculateCurrentQuantity(record).toFixed(4),
     },
     {
       title: "Итого",
@@ -75,9 +76,9 @@ const PortfolioModal = (): JSX.Element => {
       width: "20%",
       align: "center",
       render: (_, record) =>
-        `$${(
+        `$${toFixed2(
           (record.currentPrice ?? 0) * calculateCurrentQuantity(record)
-        ).toFixed(2)}`,
+        )}`,
     },
     {
       key: "actions",

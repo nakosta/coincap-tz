@@ -15,12 +15,6 @@ export type Coin = {
   explorer: string | null;
 };
 
-export type History = {
-  data: string;
-  priceUsd: string;
-  time: number;
-};
-
 type ApiData = {
   data: Coin[];
   timestamp: number;
@@ -29,6 +23,12 @@ type ApiData = {
 type CoinData = {
   data: Coin;
   timestamp: number;
+};
+
+export type History = {
+  data: string;
+  priceUsd: string;
+  time: number;
 };
 
 type HistoryData = {

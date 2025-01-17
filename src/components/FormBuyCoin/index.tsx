@@ -1,69 +1,39 @@
 import { JSX } from "react";
-import { Modal, Form, Button, Typography, InputNumber, message } from "antd";
-import {
-  setIsBuyFormOpen,
-  setSelectedCoin,
-} from "../../redux/slices/isBuyFormOpenSlice";
+import { Button, Form, InputNumber, message } from "antd";
+import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { addItem } from "../../redux/slices/portfolioSlice";
-import {
-  selectIsBuyFormOpen,
-  selectSelectedCoin,
-} from "../../redux/selectors/selectors";
-import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
-import { errors } from "../../utils/utils";
+import { selectCoin } from "../../redux/selectors/selectors";
+
 import styles from "./index.module.css";
 
-const { Text } = Typography;
-
-const BuyFormModal = (): JSX.Element => {
+const FormBuyCoin = (): JSX.Element => {
   const dispatch = useAppDispatch();
-  const isBuyFormOpen = useAppSelector(selectIsBuyFormOpen);
-  const selectedCoin = useAppSelector(selectSelectedCoin);
   const [form] = Form.useForm();
 
-  const onClose = () => {
-    dispatch(setIsBuyFormOpen(false));
-    dispatch(setSelectedCoin(null));
-    form.resetFields();
-  };
+  const coin = useAppSelector(selectCoin);
 
   const onFinish = (values: { amount: number }) => {
-    if (!selectedCoin) {
-      message.error(errors.selectedCoin);
-      return;
-    }
+    if (!coin) return;
 
     const operation = {
       quantity: values.amount,
-      priceAtAddition: parseFloat(selectedCoin.priceUsd || "0"),
+      priceAtAddition: parseFloat(coin.priceUsd || "0"),
     };
 
     dispatch(
       addItem({
-        id: selectedCoin.id,
-        name: selectedCoin.name,
+        id: coin.id,
+        name: coin.name,
         operation,
       })
     );
 
-    onClose();
-    message.success(`${selectedCoin.name} успешно добавлена в портфель.`);
+    form.resetFields();
+    message.success(`${coin.name} успешно добавлена в портфель.`);
   };
 
   return (
-    <Modal
-      open={isBuyFormOpen}
-      onCancel={onClose}
-      footer={null}
-      width={1000}
-      className={styles.buyCoin}
-    >
-      <Text className={styles.title}>
-        Купить{" "}
-        <span className={`${styles.title} ${styles.red}`}>
-          {selectedCoin?.name}
-        </span>
-      </Text>
+    <div className={styles.buyCoin}>
       <div className={styles.text}>Введите количество:</div>
       <Form
         form={form}
@@ -107,8 +77,8 @@ const BuyFormModal = (): JSX.Element => {
           </Button>
         </Form.Item>
       </Form>
-    </Modal>
+    </div>
   );
 };
 
-export default BuyFormModal;
+export default FormBuyCoin;

@@ -1,0 +1,14 @@
+.title {
+  margin: 20px 0px;
+}
+
+.symbol {
+  padding: 0px 10px;
+  font-size: 40px;
+  border: 4px solid #ff4d4f;
+}
+
+.name {
+  margin-left: 50px;
+  font-size: 40px;
+}

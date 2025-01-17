@@ -9,6 +9,7 @@ import {
   calculateInitialTotalValue,
   calculateTotalDifference,
   calculatePercentageDifference,
+  toFixed2,
 } from "../../utils/utils";
 
 import styles from "./index.module.css";
@@ -41,11 +42,11 @@ const TotalMoney = (): JSX.Element => {
       <div className={styles.textContainer}>
         <Text>Итого:</Text>
         <Text strong className={styles.textFixed}>
-          {totalValue.toFixed(2)} USD{" "}
+          {toFixed2(totalValue)} USD{" "}
           <span className={differenceClass}>
             {totalDifference >= 0 ? "+" : ""}
-            {totalDifference.toFixed(2)} ({percentageDifference >= 0 ? "+" : ""}
-            {percentageDifference.toFixed(2)}%)
+            {toFixed2(totalDifference)} ({percentageDifference >= 0 ? "+" : ""}
+            {toFixed2(percentageDifference)}%)
           </span>
         </Text>
       </div>

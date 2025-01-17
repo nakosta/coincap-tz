@@ -47,8 +47,10 @@ export const errors = {
   saveLocalStorage: "Не удалось сохранить portfolio в localStorage:",
 };
 
+export const toFixed2 = (value: number): string => value.toFixed(2);
+
 export const priceUsdStr = (value: string | null): string =>
-  value ? `$${parseFloat(value).toFixed(2)}` : "N/A";
+  value ? `$${toFixed2(parseFloat(value))}` : "N/A";
 
 export const billionStr = (value: string | null): string =>
   value ? `$${(parseFloat(value) / 1e9).toFixed(1)} млрд` : "N/A";
@@ -62,6 +64,6 @@ export const changePercentStr = (value: string | null): JSX.Element => (
       color: parseFloat(value || "0") >= 0 ? "green" : "red",
     }}
   >
-    {parseFloat(value || "0").toFixed(2)}%
+    {toFixed2(parseFloat(value || "0"))}%
   </Text>
 );

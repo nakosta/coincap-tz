@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Table, Button, Typography } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import BuyFormModal from "../../components/BuyFormModal";
+import ErrorText from "../../components/ErrorText";
 import {
   setIsBuyFormOpen,
   setSelectedCoin,
@@ -28,11 +29,7 @@ const CoinList = (): JSX.Element => {
   const navigate = useNavigate();
 
   if (error) {
-    return (
-      <Text type="danger" className={styles.error}>
-        {error}
-      </Text>
-    );
+    return <ErrorText error={error} />;
   }
 
   const columns: ColumnsType<Coin> = [

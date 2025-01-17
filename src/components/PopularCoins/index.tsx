@@ -5,7 +5,7 @@ import {
   selectCoinsStatus,
 } from "../../redux/selectors/selectors";
 import { useAppSelector } from "../../hooks/hooks";
-import { priceUsdStr } from "../../utils/utils";
+import { getPopularCoins } from "../../helpers/otherHelpers";
 import styles from "./index.module.css";
 
 const { Text } = Typography;
@@ -13,14 +13,11 @@ const { Text } = Typography;
 const PopularCoins = (): JSX.Element => {
   const coins = useAppSelector(selectCoins);
   const status = useAppSelector(selectCoinsStatus);
+  const popularCoins = getPopularCoins(coins);
+
   if (status === "loading") {
     return <Spin />;
   }
-
-  const popularCoins = coins.slice(0, 3).map((coin) => ({
-    name: coin.name,
-    price: priceUsdStr(coin.priceUsd),
-  }));
 
   return (
     <div className={styles.container}>
