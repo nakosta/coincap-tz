@@ -11,6 +11,8 @@ import {
 } from "../../redux/selectors/selectors";
 import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
 import { errors } from "../../utils/utils";
+import { minNumCoins } from "../../helpers/otherHelpers";
+
 import styles from "./index.module.css";
 
 const { Text } = Typography;
@@ -76,8 +78,8 @@ const BuyFormModal = (): JSX.Element => {
           rules={[
             {
               validator: (_, value) => {
-                if (value === undefined || value < 0.0001) {
-                  return Promise.reject("Введите число от 0.0001");
+                if (value === undefined || value < minNumCoins) {
+                  return Promise.reject(`Введите число от ${minNumCoins}`);
                 }
                 return Promise.resolve();
               },
@@ -86,7 +88,7 @@ const BuyFormModal = (): JSX.Element => {
         >
           <InputNumber
             className={styles.input}
-            step={0.0001}
+            step={minNumCoins}
             onKeyDown={(e) => {
               if (
                 !/^[\d.]$/.test(e.key) &&

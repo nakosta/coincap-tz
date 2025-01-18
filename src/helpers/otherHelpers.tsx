@@ -1,6 +1,8 @@
 import { priceUsdStr } from "../utils/utils";
 import type { Coin, History } from "../api";
 
+export const minNumCoins = 0.0001;
+
 export const getPopularCoins = (coins: Coin[]) =>
   coins.slice(0, 3).map((coin) => ({
     name: coin.name,

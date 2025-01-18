@@ -3,6 +3,7 @@ import { Button, Form, InputNumber, message } from "antd";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
 import { addItem } from "../../redux/slices/portfolioSlice";
 import { selectCoin } from "../../redux/selectors/selectors";
+import { minNumCoins } from "../../helpers/otherHelpers";
 
 import styles from "./index.module.css";
 
@@ -46,8 +47,8 @@ const FormBuyCoin = (): JSX.Element => {
           rules={[
             {
               validator: (_, value) => {
-                if (value === undefined || value < 0.0001) {
-                  return Promise.reject("Введите число от 0.0001");
+                if (value === undefined || value < minNumCoins) {
+                  return Promise.reject(`Введите число от ${minNumCoins}`);
                 }
                 return Promise.resolve();
               },
@@ -56,7 +57,7 @@ const FormBuyCoin = (): JSX.Element => {
         >
           <InputNumber
             className={styles.input}
-            step={0.0001}
+            step={minNumCoins}
             onKeyDown={(e) => {
               if (
                 !/^[\d.]$/.test(e.key) &&
