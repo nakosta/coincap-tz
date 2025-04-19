@@ -1,12 +1,8 @@
 import { JSX } from "react";
 import { Typography, Table } from "antd";
-import ErrorText from "../ErrorText";
-import { useAppSelector } from "../../hooks/hooks";
-import { selectCoin, selectCoinStatus, selectCoinError } from "../../redux/selectors/selectors";
+import { Coin } from "../../api";
 import {
-  priceUsdStr,
-  billionStr,
-  millionStr,
+  formatStr,
   changePercentStr,
 } from "../../utils/utils";
 
@@ -14,32 +10,28 @@ import styles from "./index.module.css";
 
 const { Link } = Typography;
 
-const TableCoin = (): JSX.Element => {
-  const coin = useAppSelector(selectCoin);
-  const status = useAppSelector(selectCoinStatus);
-  const error = useAppSelector(selectCoinError);
+type Props = {
+  coin: Coin;
+};
 
-  if (status === "failed" || !coin) {
-    return <ErrorText error={error} />;
-  }
-
+const TableCoin = ({ coin }: Props): JSX.Element => {
   const tableData = [
-    { key: "Цена", value: priceUsdStr(coin.priceUsd) },
+    { key: "Цена", value: formatStr(coin.priceUsd) },
     {
       key: "Доступное предложение для торговли",
-      value: millionStr(coin.supply),
+      value: formatStr(coin.supply),
     },
     {
       key: "Общее кол-во выпущенных активов",
-      value: millionStr(coin.maxSupply),
+      value: formatStr(coin.maxSupply),
     },
     {
       key: "Объем торгов за последние 24 часа",
-      value: billionStr(coin.volumeUsd24Hr),
+      value: formatStr(coin.volumeUsd24Hr),
     },
     {
       key: "Средняя цена по объёму за последние 24 часа",
-      value: priceUsdStr(coin.vwap24Hr),
+      value: formatStr(coin.vwap24Hr),
     },
     {
       key: "Процентное изменение цены за последние 24 часа",

@@ -38,6 +38,10 @@ type HistoryData = {
 
 const apiClient = axios.create({
   baseURL: import.meta.env.VITE_BASE_URL,
+  headers: {
+    accept: "application/json",
+    Authorization: `Bearer ${import.meta.env.VITE_COINCAP_API_KEY}`
+  },
 });
 
 export const coinsApi = {
@@ -55,18 +59,8 @@ export const coinsApi = {
     );
     return data.data;
   },
-};
-
-type PriceUpdate = { [assetId: string]: string };
-
-export const pricesApi = {
-  subscribeToPrices(ids: string[], onMessage: (data: PriceUpdate) => void) {
-    const wsUrl = import.meta.env.VITE_WS_URL;
-    const ws = new WebSocket(`${wsUrl}${ids.join(",")}`);
-    ws.onmessage = (event) => {
-      const data: PriceUpdate = JSON.parse(event.data);
-      onMessage(data);
-    };
-    return ws;
+  async getSearchCoins(query: string): Promise<Coin[]> {
+    const { data } = await apiClient.get<ApiData>(`/assets?search=${query}`);
+    return data.data;
   },
 };

@@ -1,21 +1,15 @@
 import { JSX } from "react";
 import { Typography } from "antd";
-import ErrorText from "../ErrorText";
-import { useAppSelector } from "../../hooks/hooks";
-import { selectCoin, selectCoinStatus, selectCoinError } from "../../redux/selectors/selectors";
+import { Coin } from "../../api";
 import styles from "./index.module.css";
 
 const { Text } = Typography;
 
-const TitleCoin = (): JSX.Element => {
-  const coin = useAppSelector(selectCoin);
-  const status = useAppSelector(selectCoinStatus);
-  const error = useAppSelector(selectCoinError);
+type Props = {
+  coin: Coin;
+};
 
-  if (status === "failed" || !coin) {
-    return <ErrorText error={error} />;
-  }
-
+const TitleCoin = ({ coin }: Props): JSX.Element => {
   return (
     <div className={styles.title}>
       <Text type="danger" className={styles.symbol}>

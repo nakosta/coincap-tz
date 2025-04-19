@@ -1,30 +1,22 @@
-import { JSX, useEffect } from "react";
+import { Image, Layout } from "antd";
+import { JSX } from "react";
 import { Outlet } from "react-router-dom";
-import { Layout } from "antd";
-import PopularCoins from "../../components/PopularCoins";
-import TotalMoney from "../../components/TotalMoney";
-import PortfolioModal from "../../components/PortfolioModal";
-import { useAppDispatch } from "../../hooks/hooks";
-import { axiosCoins } from "../../redux/slices/coinsSlice";
 import styles from "./index.module.css";
 
 const { Header } = Layout;
 
 const MainLayout = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-
-  useEffect(() => {
-    dispatch(axiosCoins());
-  }, [dispatch]);
-
   return (
     <Layout className={styles.layout}>
       <Header className={styles.header}>
-        <PopularCoins />
-        <TotalMoney />
+        <Image
+          src="/coincap_logo.png"
+          preview={false}
+          alt="Coincap"
+          height={100}
+        />
       </Header>
       <Outlet />
-      <PortfolioModal />
     </Layout>
   );
 };

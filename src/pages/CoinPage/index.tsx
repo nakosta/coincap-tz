@@ -1,40 +1,61 @@
-import { useEffect, JSX } from "react";
+import { JSX } from "react";
 import { useParams } from "react-router-dom";
 import { Spin } from "antd";
 import Chart from "../../components/Chart";
-import FormBuyCoin from "../../components/FormBuyCoin";
 import BackButton from "../../components/BackButton";
 import TableCoin from "../../components/TableCoin";
 import TitleCoin from "../../components/TitleCoin";
-import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { axiosCoin } from "../../redux/slices/coinSlice";
-import { axiosHistory } from "../../redux/slices/historySlice";
-import { selectCoinStatus } from "../../redux/selectors/selectors";
-
+import ErrorText from "../../components/ErrorText";
+import { useCoin } from "../../hooks/queries/useCoin";
+import { useHistory } from "../../hooks/queries/useHistory";
+import { errors } from "../../utils/utils";
 import styles from "./index.module.css";
 
 const CoinPage = (): JSX.Element => {
-  const { id } = useParams<{ id: string }>();
-  const dispatch = useAppDispatch();
-  const status = useAppSelector(selectCoinStatus);
+  const { id = "" } = useParams<{ id: string }>();
 
-  useEffect(() => {
-    if (id) {
-      dispatch(axiosCoin(id));
-      dispatch(axiosHistory(id));
-    }
-  }, [id, dispatch]);
+  const {
+    data: coin,
+    isLoading: isCoinLoading,
+    isError: isCoinError,
+    error: coinError,
+  } = useCoin(id);
 
-  if (status === "loading") {
+  const {
+    data: history,
+    isLoading: isHistoryLoading,
+    isError: isHistoryError,
+    error: historyError,
+  } = useHistory(id);
+
+  if (isCoinLoading || isHistoryLoading) {
     return <Spin className={styles.spin} />;
+  }
+
+  if (isCoinError) {
+    return (
+      <ErrorText error={(coinError as Error)?.message || errors.getCoin} />
+    );
+  }
+
+  if (isHistoryError) {
+    return (
+      <ErrorText
+        error={(historyError as Error)?.message || errors.getHistory}
+      />
+    );
+  }
+
+  if (!coin || !history) {
+    const error = !coin ? errors.getCoin : errors.getHistory;
+    return <ErrorText error={error} />;
   }
 
   return (
     <div className={styles.container}>
-      <TitleCoin />
-      <FormBuyCoin />
-      <TableCoin />
-      <Chart />
+      <TitleCoin coin={coin} />
+      <TableCoin coin={coin} />
+      <Chart history={history} />
       <BackButton />
     </div>
   );

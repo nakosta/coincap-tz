@@ -7,14 +7,15 @@ import {
   YAxis,
   Tooltip,
 } from "recharts";
-import { useAppSelector } from "../../hooks/hooks";
-import { selectHistory } from "../../redux/selectors/selectors";
-import { getChartData, getDomain } from "../../helpers/otherHelpers";
-
+import { History } from "../../api";
+import { getChartData, getDomain } from "../../helpers/helpers";
 import styles from "./index.module.css";
 
-const Chart = (): JSX.Element => {
-  const history = useAppSelector(selectHistory);
+type Props = {
+  history: History[];
+};
+
+const Chart = ({ history }: Props): JSX.Element => {
   const chartData = getChartData(history);
 
   return (

@@ -1,10 +1,9 @@
 .header {
   background: white;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 60px 100px;
-  border-bottom: 1px solid #f0f0f0;
+  justify-content: center;
+  padding: 60px 0px;
 }
 
 .layout {
