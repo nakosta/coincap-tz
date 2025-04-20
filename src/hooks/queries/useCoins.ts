@@ -5,6 +5,6 @@ export const useCoins = () => {
   return useQuery({
     queryKey: ['coins'],
     queryFn: coinsApi.getCoins,
-    refetchInterval: 100000000, // Не забудь убрать лишние нули!!!
+    refetchInterval: 10000,
   });
 };
